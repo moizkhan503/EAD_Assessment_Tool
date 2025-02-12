@@ -1,14 +1,17 @@
-// import React from 'react';
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import './Header.css';
 
 const Header = () => {
+  const location = useLocation();
+
   return (
     <header>
       <div className="top-header">
         <div className="header-container">
-          <a href="/" className="logo-link">
+          <Link to="/" className="logo-link">
             <span className="ontario-text">Ontario</span>
-          </a>
+          </Link>
           <div className="header-right">
             <a href="#francais" className="language-toggle">Français</a>
             <button className="sign-in">
@@ -30,10 +33,30 @@ const Header = () => {
       <nav className="main-nav">
         <div className="header-container">
           <ul className="nav-list">
-            {/* <li><a href="#curriculum" className="active">Curriculum</a></li> */}
-            {/* <li><a href="#assessment">Assessment and Evaluation</a></li> */}
-            {/* <li><a href="#resources">Resources</a></li> */}
-            {/* <li><a href="#parents">Parents</a></li> */}
+            <li>
+              <Link 
+                to="/terms" 
+                className={location.pathname === '/terms' ? 'active' : ''}
+              >
+                Terms
+              </Link>
+            </li>
+            <li>
+              <Link 
+                to="/lessonplan" 
+                className={location.pathname === '/lessonplan' ? 'active' : ''}
+              >
+                Lesson Plan
+              </Link>
+            </li>
+            <li>
+              <Link 
+                to="/assessment" 
+                className={location.pathname === '/assessment' ? 'active' : ''}
+              >
+                Assessment
+              </Link>
+            </li>
           </ul>
         </div>
       </nav>
@@ -41,4 +64,4 @@ const Header = () => {
   );
 };
 
-export default Header; 
+export default Header;

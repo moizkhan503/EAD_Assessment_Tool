@@ -2,15 +2,15 @@
 import { useState } from 'react';
 import axios from 'axios';
 import DOMPurify from 'dompurify';
-import './LessonPlan.css'; // Ensure this file exists and is properly linked
+import './LessonPlan.css';
 
 const LessonPlan = () => {
   const [pdfFile, setPdfFile] = useState(null);
   const [classDuration, setClassDuration] = useState('');
   const [teachingStyle, setTeachingStyle] = useState('');
   const [homeworkPreference, setHomeworkPreference] = useState('');
-  const [terms, setTerms] = useState(1);
-  const [lessonPlan, setLessonPlan] = useState(''); // State to hold the lesson plan response
+  const [numberOfClasses, setNumberOfClasses] = useState('');
+  const [lessonPlan, setLessonPlan] = useState('');
 
   const classDurations = ['30 min', '45 min', '60 min', 'Custom'];
   const teachingStyles = [
@@ -23,25 +23,21 @@ const LessonPlan = () => {
     'Gamified Learning',
   ];
   const homeworkPreferences = ['Problem-Solving', 'Creative', 'Research-Based'];
+  const classNumbers = Array.from({ length: 50 }, (_, i) => i + 1);
 
   const handleFileChange = (event) => {
     setPdfFile(event.target.files[0]);
   };
 
-  const handleTermsChange = (event) => {
-    setTerms(event.target.value);
-  };
-
   const handleSubmit = async (event) => {
-    event.preventDefault(); // Prevent the default form submission
+    event.preventDefault();
 
-    // Prepare the data to be sent to the API
     const formData = {
-      data: pdfFile ? pdfFile.name : '', // Send the file name as data
-      Classes: terms, // Number of classes
-      'Class Duration': classDuration, // Selected class duration
-      'Teaching Style': teachingStyle, // Selected teaching style
-      'Homework Preference': homeworkPreference, // Selected homework preference
+      data: pdfFile ? pdfFile.name : '',
+      Classes: numberOfClasses,
+      'Class Duration': classDuration,
+      'Teaching Style': teachingStyle,
+      'Homework Preference': homeworkPreference,
     };
 
     try {
@@ -51,10 +47,9 @@ const LessonPlan = () => {
         },
       });
 
-      // Sanitize the HTML response
       const sanitizedLessonPlan = DOMPurify.sanitize(response.data.data.lessonPlan);
-      setLessonPlan(sanitizedLessonPlan); // Store the sanitized lesson plan from the response
-      console.log('Response from API:', response.data); // Log the response for debugging
+      setLessonPlan(sanitizedLessonPlan);
+      console.log('Response from API:', response.data);
     } catch (error) {
       console.error('Error submitting form:', error);
     }
@@ -66,9 +61,34 @@ const LessonPlan = () => {
         <h1>Create Your Lesson Plan</h1>
 
         <form onSubmit={handleSubmit}>
-          <div className="upload-section">
-            <label htmlFor="pdf-upload">Upload PDF:</label>
-            <input type="file" id="pdf-upload" accept="application/pdf" onChange={handleFileChange} />
+          <div className="dropdown-section">
+            <label htmlFor="pdf-upload">Upload term syllabus:</label>
+            <div className="file-input-wrapper">
+              <input 
+                type="file" 
+                id="pdf-upload" 
+                accept="application/pdf" 
+                onChange={handleFileChange}
+                required 
+              />
+            </div>
+          </div>
+
+          <div className="dropdown-section">
+            <label htmlFor="number-of-classes">Number of Classes:</label>
+            <select
+              id="number-of-classes"
+              value={numberOfClasses}
+              onChange={(e) => setNumberOfClasses(e.target.value)}
+              required
+            >
+              <option value="">Select Number of Classes</option>
+              {classNumbers.map((number) => (
+                <option key={number} value={number}>
+                  {number} {number === 1 ? 'Class' : 'Classes'}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="dropdown-section">
@@ -77,6 +97,7 @@ const LessonPlan = () => {
               id="class-duration"
               value={classDuration}
               onChange={(e) => setClassDuration(e.target.value)}
+              required
             >
               <option value="">Select Duration</option>
               {classDurations.map((duration) => (
@@ -93,6 +114,7 @@ const LessonPlan = () => {
               id="teaching-style"
               value={teachingStyle}
               onChange={(e) => setTeachingStyle(e.target.value)}
+              required
             >
               <option value="">Select Teaching Style</option>
               {teachingStyles.map((style) => (
@@ -104,13 +126,14 @@ const LessonPlan = () => {
           </div>
 
           <div className="dropdown-section">
-            <label htmlFor="homework-preference">Homework Preferences:</label>
+            <label htmlFor="homework-preference">Homework Preference:</label>
             <select
               id="homework-preference"
               value={homeworkPreference}
               onChange={(e) => setHomeworkPreference(e.target.value)}
+              required
             >
-              <option value="">Select Homework Preference</option>
+              <option value="">Select Homework Type</option>
               {homeworkPreferences.map((preference) => (
                 <option key={preference} value={preference}>
                   {preference}
@@ -119,26 +142,15 @@ const LessonPlan = () => {
             </select>
           </div>
 
-          <div className="terms-section">
-            <h2>Number of Classes</h2>
-            <input
-              type="range"
-              min="1"
-              max="50"
-              value={terms}
-              onChange={handleTermsChange}
-              className="terms-range"
-            />
-            <span>{terms} classes</span>
-          </div>
-
-          <button type="submit" className="submit-button">Submit</button>
+          <button type="submit" className="submit-button">
+            Generate Lesson Plan
+          </button>
         </form>
 
         {lessonPlan && (
-          <div className="response-section">
-            <h2>Generated Lesson Plan:</h2>
-            <div dangerouslySetInnerHTML={{ __html: lessonPlan }} /> {/* Render the sanitized HTML */}
+          <div className="lesson-plan-output">
+            <h2>Generated Lesson Plan</h2>
+            <div dangerouslySetInnerHTML={{ __html: lessonPlan }} />
           </div>
         )}
       </div>

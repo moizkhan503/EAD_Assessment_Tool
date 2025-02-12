@@ -49,16 +49,48 @@ label {
   color: #555;
 }
 
-input[type="file"] {
+.file-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.file-input-wrapper input[type="file"] {
   width: 100%;
   padding: 12px;
   border: 2px solid #00796b;
   border-radius: 8px;
-  transition: border-color 0.3s;
+  background-color: #e0f2f1;
+  color: #333;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-input[type="file"]:hover {
+.file-input-wrapper input[type="file"]::-webkit-file-upload-button {
+  display: none;
+}
+
+.file-input-wrapper input[type="file"]::before {
+  content: 'Choose File';
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #00796b;
+  font-weight: 600;
+  font-size: 0.9rem;
+  pointer-events: none;
+}
+
+.file-input-wrapper input[type="file"]:hover {
   border-color: #004d40;
+  background-color: #b2dfdb;
+}
+
+.file-input-wrapper input[type="file"]:focus {
+  outline: none;
+  border-color: #004d40;
+  box-shadow: 0 0 0 2px rgba(0, 121, 107, 0.2);
 }
 
 select {
@@ -66,12 +98,30 @@ select {
   padding: 12px;
   border: 2px solid #00796b;
   border-radius: 8px;
-  background-color: #e0f2f1; /* Light teal background for dropdowns */
-  transition: border-color 0.3s;
+  background-color: #e0f2f1;
+  color: #333;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300796b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  padding-right: 40px;
 }
 
 select:hover {
   border-color: #004d40;
+  background-color: #b2dfdb;
+}
+
+select:focus {
+  outline: none;
+  border-color: #004d40;
+  box-shadow: 0 0 0 2px rgba(0, 121, 107, 0.2);
 }
 
 .terms-section {
@@ -121,6 +171,7 @@ span {
   margin-top: 10px;
   display: block;
 }
+
 .submit-button {
   background-color: #00796b; /* Teal background */
   color: white; /* White text */

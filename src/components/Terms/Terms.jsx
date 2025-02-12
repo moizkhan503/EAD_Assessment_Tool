@@ -1,20 +1,15 @@
-import { useEffect, useState, Component } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import { PDFDownloadLink, Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer';
 import axios from 'axios';
 import DOMPurify from 'dompurify';
-import Header from '../Header/Header';
-import Footer from '../Footer/Footer';
 import './Terms.css';
 
 // Register the font
 Font.register({
   family: 'Helvetica',
   fonts: [
-    {
-      src: 'https://fonts.gstatic.com/s/helveticaneue/v70/1Ptsg8zYS_SKggPNyC0IT4ttDfA.ttf',
-    },
+    { src: 'https://fonts.gstatic.com/s/helveticaneue/v70/1Ptsg8zYS_SKggPNyC0IT4ttDfA.ttf' },
     {
       src: 'https://fonts.gstatic.com/s/helveticaneue/v70/1Ptsg8zYS_SKggPNyC0IT4ttDfB.ttf',
       fontWeight: 'bold',
@@ -22,218 +17,202 @@ Font.register({
   ],
 });
 
-// Update PDF Styles
 const pdfStyles = StyleSheet.create({
-  page: {
-    padding: 30,
-    fontFamily: 'Helvetica',
-  },
-  section: {
-    margin: 10,
-  },
-  title: {
-    fontSize: 24,
-    textAlign: 'center',
-    marginBottom: 30,
-  },
-  content: {
-    fontSize: 12,
-    lineHeight: 1.5,
-    textAlign: 'justify',
-  }
+  page: { padding: 30, fontFamily: 'Helvetica' },
+  section: { margin: 10 },
+  title: { fontSize: 24, textAlign: 'center', marginBottom: 30 },
+  content: { fontSize: 12, lineHeight: 1.5, textAlign: 'justify' }
 });
 
-// Update PDF Document Component
-const PDFDocument = ({ data }) => {
-  const processContent = (htmlString) => {
-    const div = document.createElement('div');
-    div.innerHTML = htmlString;
-    return div.innerText || div.textContent || '';
-  };
-
-  return (
-    <Document>
-      <Page size="A4" style={pdfStyles.page}>
-        <View style={pdfStyles.section}>
-          <Text style={pdfStyles.title}>{data.title}</Text>
-          <Text style={pdfStyles.content}>
-            {processContent(data.terms[0].content)}
-          </Text>
-        </View>
-      </Page>
-    </Document>
-  );
-};
-
-PDFDocument.propTypes = {
-  data: PropTypes.shape({
-    title: PropTypes.string,
-    terms: PropTypes.arrayOf(PropTypes.shape({
-      content: PropTypes.string,
-    }))
-  }).isRequired
-};
-
-// Update the PDFErrorBoundary component
-class PDFErrorBoundary extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false };
-  }
-
-  static getDerivedStateFromError() {
-    return { hasError: true };
-  }
-
-  componentDidCatch(_error, errorInfo) {
-    console.error('PDF Error:', errorInfo);
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return (
-        <div className="pdf-error">
-          <p>Unable to generate PDF. Please try again later.</p>
-          <button 
-            onClick={() => this.setState({ hasError: false })}
-            className="retry-button"
-          >
-            Retry
-          </button>
-        </div>
-      );
-    }
-
-    return this.props.children;
-  }
-}
-
-PDFErrorBoundary.propTypes = {
-  children: PropTypes.node.isRequired
-};
+const PDFDocument = ({ data }) => (
+  <Document>
+    <Page size="A4" style={pdfStyles.page}>
+      <View style={pdfStyles.section}>
+        <Text style={pdfStyles.title}>{data.title}</Text>
+        <Text style={pdfStyles.content}>
+          {data.terms[0].content.replace(/<[^>]*>/g, '')}
+        </Text>
+      </View>
+    </Page>
+  </Document>
+);
 
 const Terms = () => {
   const navigate = useNavigate();
-  const [termPlan, setTermPlan] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [pdfData, setPdfData] = useState(null);
+  const [termPlan, setTermPlan] = useState(null);
+  
+  // Form states
+  const [selectedCurriculum, setSelectedCurriculum] = useState('');
+  const [selectedSubject, setSelectedSubject] = useState('');
+  const [selectedGrade, setSelectedGrade] = useState('');
+  const [selectedTerms, setSelectedTerms] = useState('');
 
-  useEffect(() => {
-    const fetchTermPlan = async () => {
-      try {
-        // Get the selected project from localStorage
-        const selectedProject = localStorage.getItem('selectedProject');
-        if (!selectedProject) {
-          throw new Error('No project selected');
-        }
+  const curriculumOptions = [
+    { id: 'ontario', name: 'Ontario Curriculum' },
+    { id: 'common-core', name: 'US Common Core Curriculum' },
+    { id: 'canadian', name: 'Canadian Curriculum' }
+  ];
 
-        const projectData = JSON.parse(selectedProject);
-        console.log('Project Data:', projectData);
+  const subjectOptions = [
+    { id: 'english', name: 'English' },
+    { id: 'computer', name: 'Computer' },
+    { id: 'science', name: 'Science' }
+  ];
 
-        // Make POST request to the lesson-terms generate API
-        const response = await axios.post('https://apis.earlyagedevelopment.com/api/lesson-terms/generate', {
-          curriculum: projectData.curriculum,
-          subject: projectData.subject,
-          grade: projectData.grade,
-          numberOfTerms: projectData.numberOfTerms
-        });
-        
-        if (!response.data || !response.data.success) {
-          throw new Error(response.data?.message || 'Failed to generate term plan');
-        }
+  const gradeOptions = [2, 3, 4, 5];
+  const termOptions = [2, 3, 4];
 
-        // Add detailed logging of the API response
-        console.log('Complete API Response:', JSON.stringify(response.data, null, 2));
-        console.log('Terms Data:', response.data.data);
+  const handleGeneratePlan = async (event) => {
+    event.preventDefault();
+    setLoading(true);
+    setError(null);
 
-        // Instead of formatting to markdown, directly use the HTML content
-        const termsData = response.data.data;
-        
-        // Sanitize the HTML content
-        const sanitizedHtml = DOMPurify.sanitize(termsData.termPlan);
-        setTermPlan(sanitizedHtml);
-        
-        // Simplify PDF data structure
-        setPdfData({
-          title: `${projectData.subject.charAt(0).toUpperCase() + projectData.subject.slice(1)} Grade ${projectData.grade} - ${projectData.curriculum.charAt(0).toUpperCase() + projectData.curriculum.slice(1)} Curriculum`,
-          terms: [{
-            content: sanitizedHtml
-          }]
-        });
-        
-        setLoading(false);
-      } catch (err) {
-        console.error('Error fetching term plan:', err);
-        setError(err.message || 'Failed to load term plan');
-        setLoading(false);
+    try {
+      const formData = {
+        curriculum: selectedCurriculum,
+        subject: selectedSubject,
+        grade: selectedGrade.toString(),
+        numberOfTerms: parseInt(selectedTerms)
+      };
+
+      localStorage.setItem('selectedProject', JSON.stringify(formData));
+
+      const response = await axios.post('https://apis.earlyagedevelopment.com/api/lesson-terms/generate', formData);
+      
+      if (!response.data || !response.data.success) {
+        throw new Error(response.data?.message || 'Failed to generate term plan');
       }
-    };
 
-    fetchTermPlan();
-  }, []);
-
-  if (loading) {
-    return (
-      <div>
-        <Header />
-        <div className="terms-container loading">
-          <div className="loader">Loading your lesson plan...</div>
-        </div>
-        <Footer />
-      </div>
-    );
-  }
-
-  if (error || !termPlan) {
-    return (
-      <div>
-        <Header />
-        <div className="terms-container error">
-          <div className="error-message">
-            <h2>Error Loading Terms</h2>
-            <p>{error || 'Failed to load term plan data'}</p>
-            <button onClick={() => navigate('/')} className="back-button">
-              Go Back
-            </button>
-          </div>
-        </div>
-        <Footer />
-      </div>
-    );
-  }
+      const termsData = response.data.data;
+      const sanitizedHtml = DOMPurify.sanitize(termsData.termPlan);
+      setTermPlan(sanitizedHtml);
+      
+      setPdfData({
+        title: `${selectedSubject.charAt(0).toUpperCase() + selectedSubject.slice(1)} Grade ${selectedGrade} - ${selectedCurriculum.charAt(0).toUpperCase() + selectedCurriculum.slice(1)} Curriculum`,
+        terms: [{ content: sanitizedHtml }]
+      });
+    } catch (err) {
+      console.error('Error generating term plan:', err);
+      setError(err.message || 'Failed to generate term plan');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div>
-      <Header />
-      <div className="terms-container">
-        <div className="terms-content">
-          {pdfData && (
-            <PDFErrorBoundary>
+    <div className="terms-page">
+      <div className="content">
+        <h1>Create Your Curriculum Plan</h1>
+
+        <form onSubmit={handleGeneratePlan}>
+          <div className="dropdown-section">
+            <label htmlFor="curriculum">Select Curriculum:</label>
+            <select
+              id="curriculum"
+              value={selectedCurriculum}
+              onChange={(e) => setSelectedCurriculum(e.target.value)}
+              required
+            >
+              <option value="">Select Curriculum</option>
+              {curriculumOptions.map(curriculum => (
+                <option key={curriculum.id} value={curriculum.id}>
+                  {curriculum.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="dropdown-section">
+            <label htmlFor="subject">Select Subject:</label>
+            <select
+              id="subject"
+              value={selectedSubject}
+              onChange={(e) => setSelectedSubject(e.target.value)}
+              required
+            >
+              <option value="">Select Subject</option>
+              {subjectOptions.map(subject => (
+                <option key={subject.id} value={subject.id}>
+                  {subject.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="dropdown-section">
+            <label htmlFor="grade">Select Grade:</label>
+            <select
+              id="grade"
+              value={selectedGrade}
+              onChange={(e) => setSelectedGrade(e.target.value)}
+              required
+            >
+              <option value="">Select Grade</option>
+              {gradeOptions.map(grade => (
+                <option key={grade} value={grade}>
+                  Grade {grade}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="dropdown-section">
+            <label htmlFor="terms">Number of Terms:</label>
+            <select
+              id="terms"
+              value={selectedTerms}
+              onChange={(e) => setSelectedTerms(e.target.value)}
+              required
+            >
+              <option value="">Select Number of Terms</option>
+              {termOptions.map(term => (
+                <option key={term} value={term}>
+                  {term} {term === 1 ? 'Term' : 'Terms'}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <button type="submit" className="submit-button" disabled={loading}>
+            {loading ? 'Generating...' : 'Generate Curriculum Plan'}
+          </button>
+        </form>
+
+        {error && (
+          <div className="error-message">
+            <h2>Error</h2>
+            <p>{error}</p>
+          </div>
+        )}
+
+        {termPlan && !error && (
+          <div className="terms-content">
+            {pdfData && (
               <div className="pdf-download-button">
                 <PDFDownloadLink
                   document={<PDFDocument data={pdfData} />}
-                  fileName="term_plan.pdf"
+                  fileName="curriculum_plan.pdf"
                   className="pdf-button"
                 >
-                  {({ loading: pdfLoading }) => 
-                    pdfLoading ? 'Loading document...' : 'Download PDF'
-                  }
+                  {({ loading }) => (loading ? 'Preparing PDF...' : 'Download PDF')}
                 </PDFDownloadLink>
               </div>
-            </PDFErrorBoundary>
-          )}
-          <div className="html-scroll-container">
-            <div 
-              className="html-content"
-              dangerouslySetInnerHTML={{ __html: termPlan }}
-            />
+            )}
+            
+            <div className="html-scroll-container">
+              <div 
+                className="html-content"
+                dangerouslySetInnerHTML={{ __html: termPlan }}
+              />
+            </div>
           </div>
-        </div>
+        )}
       </div>
-      <Footer />
     </div>
   );
 };
 
-export default Terms; 
+export default Terms;
