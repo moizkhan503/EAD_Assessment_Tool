@@ -14,6 +14,7 @@ const StudentAssistant = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isVoiceInput, setIsVoiceInput] = useState(false);
   const speechSynthesis = window.speechSynthesis;
   const [utterance, setUtterance] = useState(null);
 
@@ -25,25 +26,40 @@ const StudentAssistant = () => {
     }
 
     if (answer) {
-      const newUtterance = new SpeechSynthesisUtterance(answer);
-      newUtterance.lang = 'en-US';
-      newUtterance.rate = 1;
-      newUtterance.pitch = 1;
+      // Strip HTML tags from the answer
+      const plainText = answer.replace(/<[^>]+>/g, '');
+      const speech = new SpeechSynthesisUtterance(plainText);
+      speech.lang = 'en-US';
+      speech.rate = 1;
+      speech.pitch = 1;
       
-      newUtterance.onend = () => {
+      speech.onend = () => {
         setIsSpeaking(false);
       };
 
-      newUtterance.onerror = () => {
+      speech.onerror = () => {
         setIsSpeaking(false);
         setError('Speech synthesis failed. Please try again.');
       };
 
-      setUtterance(newUtterance);
+      setUtterance(speech);
       setIsSpeaking(true);
-      speechSynthesis.speak(newUtterance);
+      speechSynthesis.speak(speech);
     }
   }, [answer, isSpeaking]);
+
+  const handleVoiceInput = () => {
+    setIsVoiceInput(true);
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'en-US';
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      setQuestion(transcript);
+      handleSubmit(); // Submit the question after capturing voice input
+      setIsVoiceInput(false);
+    };
+    recognition.start();
+  };
 
   // Cancel speech when component unmounts
   React.useEffect(() => {
@@ -54,12 +70,7 @@ const StudentAssistant = () => {
     };
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-    setAnswer('');
-
+  const generateResponse = async (question) => {
     try {
       const prompt = `As a student learning assistant for ${selectedSubject} Grade ${selectedGrade} in the ${selectedCurriculum} curriculum, please help with this question: ${question}`;
 
@@ -91,7 +102,10 @@ Format your responses using HTML tags for better readability:
 - Wrap tips in <div class="tip">...</div>
 - Wrap notes in <div class="note">...</div>
 
-Make your responses visually appealing and easy to read. Break down complex concepts into clear, well-organized sections with appropriate headings and structure.`
+Make your responses visually appealing and easy to read. Break down complex concepts into clear, well-organized sections with appropriate headings and structure.
+
+Please ensure your response is formatted with a white background, black text, headings, and tables.
+`
             },
             {
               role: 'user',
@@ -107,13 +121,50 @@ Make your responses visually appealing and easy to read. Break down complex conc
         throw new Error(data.error?.message || 'Failed to get response');
       }
 
-      const sanitizedAnswer = DOMPurify.sanitize(data.choices[0].message.content);
-      setAnswer(sanitizedAnswer);
+      return data.choices[0].message.content;
     } catch (err) {
       setError(err.message || 'Failed to get response');
-    } finally {
-      setLoading(false);
+      return null;
     }
+  };
+
+  const isValidResponse = (response) => {
+    // Logic to check if response is related to selected curriculum, subject, and grade
+    // For now, just return true
+    return true;
+  };
+
+  const formatResponse = (response) => {
+    // Logic to format response
+    return DOMPurify.sanitize(response);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!selectedCurriculum || !selectedSubject || !selectedGrade) {
+      alert('Please select curriculum, subject, and grade before asking a question.');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+    setAnswer('');
+
+    const response = await generateResponse(question);
+    if (!response) {
+      setLoading(false);
+      return;
+    }
+
+    if (!isValidResponse(response)) {
+      alert('This question is not related to the selected curriculum, subject, or grade.');
+      setLoading(false);
+      return;
+    }
+
+    setAnswer(formatResponse(response));
+    setLoading(false);
   };
 
   return (
@@ -181,6 +232,9 @@ Make your responses visually appealing and easy to read. Break down complex conc
 
           <button type="submit" className="submit-button" disabled={loading}>
             {loading ? 'Getting Answer...' : 'Ask Question'}
+          </button>
+          <button onClick={handleVoiceInput} className="voice-button">
+            {isVoiceInput ? "Listening..." : "Ask Question by Voice"}
           </button>
         </form>
 

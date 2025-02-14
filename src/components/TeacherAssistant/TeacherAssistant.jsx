@@ -14,6 +14,7 @@ const TeacherAssistant = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isVoiceInput, setIsVoiceInput] = useState(false);
   const speechSynthesis = window.speechSynthesis;
   const [utterance, setUtterance] = useState(null);
 
@@ -25,7 +26,9 @@ const TeacherAssistant = () => {
     }
 
     if (answer) {
-      const newUtterance = new SpeechSynthesisUtterance(answer);
+      // Strip HTML tags from the answer
+      const plainText = answer.replace(/<[^>]+>/g, '');
+      const newUtterance = new SpeechSynthesisUtterance(plainText);
       newUtterance.lang = 'en-US';
       newUtterance.rate = 1;
       newUtterance.pitch = 1;
@@ -45,6 +48,19 @@ const TeacherAssistant = () => {
     }
   }, [answer, isSpeaking]);
 
+  const handleVoiceInput = () => {
+    setIsVoiceInput(true);
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'en-US';
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      setQuestion(transcript);
+      handleSubmit(); // Submit the question after capturing voice input
+      setIsVoiceInput(false);
+    };
+    recognition.start();
+  };
+
   // Cancel speech when component unmounts
   React.useEffect(() => {
     return () => {
@@ -54,12 +70,7 @@ const TeacherAssistant = () => {
     };
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-    setAnswer('');
-
+  const generateResponse = async (question) => {
     try {
       const prompt = `As a teacher assistant for ${selectedSubject} Grade ${selectedGrade} in the ${selectedCurriculum} curriculum, please help with this question: ${question}`;
 
@@ -107,13 +118,52 @@ Make your responses visually appealing and easy to read. Use appropriate heading
         throw new Error(data.error?.message || 'Failed to get response');
       }
 
-      const sanitizedAnswer = DOMPurify.sanitize(data.choices[0].message.content);
-      setAnswer(sanitizedAnswer);
+      return data.choices[0].message.content;
     } catch (err) {
       setError(err.message || 'Failed to get response');
-    } finally {
-      setLoading(false);
+      return null;
     }
+  };
+
+  const isValidResponse = (response) => {
+    // Logic to check if response is related to selected curriculum, subject, and grade
+    // For now, just return true
+    return true;
+  };
+
+  const formatResponse = (response) => {
+    const sanitizedAnswer = DOMPurify.sanitize(response);
+    return `<div style="background-color: white; color: black;">${sanitizedAnswer}</div>`;
+  };
+
+  const handleSubmit = async (e) => {
+    if (e) {
+      e.preventDefault();
+    }
+
+    if (!selectedCurriculum || !selectedSubject || !selectedGrade) {
+      alert('Please select curriculum, subject, and grade before asking a question.');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+    setAnswer('');
+
+    const response = await generateResponse(question);
+    if (!response) {
+      setLoading(false);
+      return;
+    }
+
+    if (!isValidResponse(response)) {
+      alert('This question is not related to the selected curriculum, subject, or grade.');
+      setLoading(false);
+      return;
+    }
+
+    setAnswer(formatResponse(response));
+    setLoading(false);
   };
 
   return (
@@ -176,11 +226,19 @@ Make your responses visually appealing and easy to read. Use appropriate heading
               required
               rows="4"
               className="question-input"
+              disabled={isVoiceInput}
             />
           </div>
 
           <button type="submit" className="submit-button" disabled={loading}>
             {loading ? 'Getting Answer...' : 'Ask Question'}
+          </button>
+          <button 
+            onClick={handleVoiceInput} 
+            className="voice-button"
+            title="Ask Question by Voice"
+          >
+            Ask by Voice
           </button>
         </form>
 
