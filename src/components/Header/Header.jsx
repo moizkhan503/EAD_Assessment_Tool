@@ -5,6 +5,14 @@ import './Header.css';
 const Header = () => {
   const location = useLocation();
 
+  const pages = [
+    { name: 'Terms', path: '/terms' },
+    { name: 'Lesson Plan', path: '/lessonplan' },
+    { name: 'Assessment', path: '/assessment' },
+    { name: 'Teacher Assistant', path: '/teacher-assistant' },
+    { name: 'Student Assistant', path: '/student-assistant' }
+  ];
+
   return (
     <header>
       <div className="top-header">
@@ -33,30 +41,16 @@ const Header = () => {
       <nav className="main-nav">
         <div className="header-container">
           <ul className="nav-list">
-            <li>
-              <Link 
-                to="/terms" 
-                className={location.pathname === '/terms' ? 'active' : ''}
-              >
-                Terms
-              </Link>
-            </li>
-            <li>
-              <Link 
-                to="/lessonplan" 
-                className={location.pathname === '/lessonplan' ? 'active' : ''}
-              >
-                Lesson Plan
-              </Link>
-            </li>
-            <li>
-              <Link 
-                to="/assessment" 
-                className={location.pathname === '/assessment' ? 'active' : ''}
-              >
-                Assessment
-              </Link>
-            </li>
+            {pages.map((page, index) => (
+              <li key={index}>
+                <Link 
+                  to={page.path} 
+                  className={location.pathname === page.path ? 'active' : ''}
+                >
+                  {page.name}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
       </nav>

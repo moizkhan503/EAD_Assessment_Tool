@@ -58,7 +58,7 @@ const Terms = () => {
 
   const subjectOptions = [
     { id: 'english', name: 'English' },
-    { id: 'computer', name: 'Computer' },
+    { id: 'maths', name: 'Maths' },
     { id: 'science', name: 'Science' }
   ];
 
