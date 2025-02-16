@@ -1,0 +1,225 @@
+:root {
+  --header-black: #1a1a1a;
+  --ontario-red: #cd1c2c;
+  --white: #ffffff;
+  --gray-100: #f8f9fa;
+  --gray-200: #ddd;
+  --gray-900: #212529;
+}
+
+.header {
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  padding: 1rem 0;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+}
+
+.header-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.top-header {
+  background: #1a1a1a;
+  padding: 1rem 0;
+}
+
+.top-header .header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo h1 {
+  color: white;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.logo-link {
+  text-decoration: none;
+}
+
+.ontario-text {
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.assistant-nav {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  margin: 0 2rem;
+}
+
+.nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-list a {
+  color: white;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.nav-list a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-list a.active {
+  background-color: #4834d4;
+  color: white;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.language-toggle {
+  color: white;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: opacity 0.2s;
+}
+
+.language-toggle:hover {
+  opacity: 0.8;
+}
+
+.sign-in,
+.help-button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: opacity 0.2s;
+}
+
+.sign-in:hover,
+.help-button:hover {
+  opacity: 0.8;
+}
+
+.main-header {
+  background: linear-gradient(135deg, #4834d4 0%, #686de0 100%);
+  padding: 2rem 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.site-title {
+  color: white;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  text-align: center;
+  letter-spacing: -0.5px;
+}
+
+.main-nav {
+  position: relative;
+  background: var(--white);
+}
+
+.nav-menu ul {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+
+.nav-menu a {
+  color: white;
+  text-decoration: none;
+  font-size: 1.1rem;
+  transition: color 0.3s ease;
+}
+
+.nav-menu a:hover {
+  color: #ffd700;
+}
+
+@media (max-width: 1024px) {
+  .header-container {
+    padding: 0 1.5rem;
+  }
+
+  .site-title {
+    font-size: 1.8rem;
+  }
+
+  .nav-list {
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-container {
+    padding: 0 1rem;
+    flex-wrap: wrap;
+  }
+
+  .assistant-nav {
+    order: 3;
+    width: 100%;
+    margin: 1rem 0 0;
+  }
+
+  .nav-list {
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .nav-list a {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  .ontario-text {
+    font-size: 1rem;
+  }
+
+  .header-right {
+    gap: 1rem;
+  }
+
+  .language-toggle {
+    font-size: 0.8rem;
+  }
+
+  .nav-menu ul {
+    padding: 0 1rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .nav-menu a {
+    font-size: 0.9rem;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-right {
+    gap: 1rem;
+  }
+
+  .language-toggle {
+    font-size: 0.8rem;
+  }
+}
