@@ -23,6 +23,7 @@ export default defineConfig({
     outDir: 'build',
     assetsDir: 'assets',
     cssCodeSplit: true,
+    minify: 'esbuild',
     rollupOptions: {
       output: {
         manualChunks: undefined,
@@ -39,8 +40,7 @@ export default defineConfig({
         entryFileNames: 'assets/js/[name]-[hash].js',
       },
     },
-    sourcemap: true,
-    minify: 'terser'
+    sourcemap: true
   },
   base: '/'
 })
