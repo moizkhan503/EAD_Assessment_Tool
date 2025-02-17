@@ -19,6 +19,9 @@ jobs:
       - name: Build React Project
         run: npm run build
 
+      - name: Copy .htaccess
+        run: copy "public\.htaccess" "build\.htaccess"
+
       - name: Deploy to Plesk via FTP
         uses: SamKirkland/ftp-deploy-action@v4.3.5
         with:
