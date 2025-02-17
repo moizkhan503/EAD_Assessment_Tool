@@ -16,18 +16,19 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16.20.0'
+          node-version: '18.x'
           
       - name: Install Dependencies
         run: |
-          npm install --legacy-peer-deps
+          npm install --force
           
       - name: Build React Project
         run: |
-          export NODE_OPTIONS="--max_old_space_size=4096"
+          export NODE_OPTIONS="--max_old_space_size=8192"
           npm run build
         env:
           CI: false
+          VITE_SOME_KEY: ${{ secrets.VITE_SOME_KEY }}
 
       - name: Deploy to Plesk via FTP
         uses: SamKirkland/ftp-deploy-action@v4.3.5
