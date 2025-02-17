@@ -28,14 +28,22 @@ jobs:
           npm run build
         env:
           CI: false
-          VITE_SOME_KEY: ${{ secrets.VITE_SOME_KEY }}
+
+      - name: Check Build Output
+        run: |
+          if [ ! -d "build" ]; then
+            echo "Build directory 'build' not found!"
+            exit 1
+          fi
+          ls -la build/
 
       - name: Deploy to Plesk via FTP
+        if: success()
         uses: SamKirkland/ftp-deploy-action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./dist/
+          local-dir: ./build/
           server-dir: ./
           dangerous-clean-slate: true
