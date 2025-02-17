@@ -7,43 +7,23 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
         
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18.x'
-          
       - name: Install Dependencies
-        run: |
-          npm install --force
-          
+        run: npm install
+        # Step 3: Build the React Project
       - name: Build React Project
-        run: |
-          export NODE_OPTIONS="--max_old_space_size=8192"
-          npm run build
-        env:
-          CI: false
-
-      - name: Check Build Output
-        run: |
-          if [ ! -d "build" ]; then
-            echo "Build directory 'build' not found!"
-            exit 1
-          fi
-          ls -la build/
+        run: npm run build
 
       - name: Deploy to Plesk via FTP
-        if: success()
         uses: SamKirkland/ftp-deploy-action@v4.3.5
         with:
-          server: ${{ secrets.FTP_SERVER }}
+          server:  ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./build/
-          server-dir: ./
-          dangerous-clean-slate: true
+          local-dir: ./build/ # Update if needed (e.g., `./dist` for built files)
+          server-dir: ./ # Path in Plesk server
