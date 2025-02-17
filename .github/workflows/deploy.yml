@@ -16,7 +16,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16.x'
+          node-version: '16.20.0'
           
       - name: Install Dependencies
         run: |
@@ -24,6 +24,7 @@ jobs:
           
       - name: Build React Project
         run: |
+          export NODE_OPTIONS="--max_old_space_size=4096"
           npm run build
         env:
           CI: false
