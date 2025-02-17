@@ -7,21 +7,19 @@ body {
 
 .lesson-plan-container {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 100vh; /* Use full viewport height */
-  padding: 21px;
+  min-height: 100vh; /* Full height of the viewport */
+  padding: 2px;
 }
 
 .content {
-  background-color: #ffffff;
-  border-radius: 17px; /* Rounded corners for modern look */
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2); /* Enhanced shadow for depth */
+  background: white; /* Card background */
+  border-radius: 16px; /* More rounded corners */
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2); /* Deeper shadow for depth */
   padding: 40px;
   width: 100%;
-  max-width: 800px;
-  margin: 20px auto;
+  max-width: 600px; /* Limit the width */
   text-align: center;
   transition: transform 0.3s, box-shadow 0.3s; /* Smooth transition */
 }
