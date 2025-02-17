@@ -8,19 +8,23 @@ const __dirname = path.dirname(new URL(import.meta.url).pathname);
 export default defineConfig({
   plugins: [react()],
   assetsInclude: ['**/*.PNG'],
+  base: '/',
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'), // Correct usage of __dirname
+      '@': path.resolve(__dirname, './src'),
     },
   },
- 
   build: {
-    outDir: 'build', // Change this to 'build' if you want the output here
+    outDir: 'build',
     assetsDir: 'assets',
     rollupOptions: {
       output: {
         assetFileNames: 'assets/[name][extname]'
       }
     }
+  },
+  server: {
+    port: 3000,
+    historyApiFallback: true
   }
 })
