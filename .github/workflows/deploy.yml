@@ -19,14 +19,12 @@ jobs:
       - name: Build React Project
         run: npm run build
 
-      - name: Copy .htaccess
-        run: copy "public\.htaccess" "build\.htaccess"
-
       - name: Deploy to Plesk via FTP
         uses: SamKirkland/ftp-deploy-action@v4.3.5
         with:
           server:  ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./build/ # Update if needed (e.g., `./dist` for built files)
-          server-dir: ./ # Path in Plesk server
+          local-dir: ./build/
+          server-dir: ./ 
+          
