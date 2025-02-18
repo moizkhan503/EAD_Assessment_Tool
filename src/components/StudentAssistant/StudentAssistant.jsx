@@ -72,7 +72,26 @@ const StudentAssistant = () => {
 
   const generateResponse = async (question) => {
     try {
-      const prompt = `As a student learning assistant for ${selectedSubject} Grade ${selectedGrade} in the ${selectedCurriculum} curriculum, please help with this question: ${question}`;
+      const prompt = `As a student learning assistant for ${selectedSubject} Grade ${selectedGrade} in the ${selectedCurriculum} curriculum, I'd be happy to help with your question. Please provide a clear and concise response that addresses the student's query. 
+
+Format your responses using HTML tags for better readability:
+- Use <h1> for main topics
+- Use <h2> for subtopics
+- Use <h3> for section headings
+- Use <p> for paragraphs
+- Use <strong> for emphasis
+- Use <em> for secondary emphasis
+- Use <ul> and <li> for unordered lists
+- Use <ol> and <li> for ordered lists
+- Use <blockquote> for important quotes or key points
+- Use <code> for any code or specific terms
+- Create tables using <table>, <tr>, <th>, and <td> when presenting structured data
+- Wrap tips in <div class="tip">...</div>
+- Wrap notes in <div class="note">...</div>
+
+Please ensure your response is visually appealing, easy to read, and addresses the student's question directly.
+
+Here is the student's question: ${question}`;
 
       const response = await fetch(GROQ_API_URL, {
         method: 'POST',
@@ -108,7 +127,7 @@ Please ensure your response is formatted with a white background, black text, he
 `
             },
             {
-              role: 'user',
+              role: 'assistant',
               content: prompt
             }
           ],
@@ -143,28 +162,43 @@ Please ensure your response is formatted with a white background, black text, he
     e.preventDefault();
 
     if (!selectedCurriculum || !selectedSubject || !selectedGrade) {
-      alert('Please select curriculum, subject, and grade before asking a question.');
+      alert('Please select the curriculum, subject, and grade before asking a question. I am here to assist you!');
       return;
     }
 
-    setLoading(true);
-    setError('');
-    setAnswer('');
+    const greetingKeywords = ['hello', 'hi', 'hey'];
+    const isGreeting = greetingKeywords.some(keyword => question.toLowerCase().includes(keyword));
 
-    const response = await generateResponse(question);
-    if (!response) {
+    if (isGreeting) {
+      setAnswer('Welcome! How can I assist you today? Feel free to ask any questions.');
+      return;
+    }
+
+    const specificKeywords = ['course', 'project', 'assignment'];
+    const isSpecificRequest = specificKeywords.some(keyword => question.toLowerCase().includes(keyword));
+
+    if (isSpecificRequest) {
+      setLoading(true);
+      setError('');
+      setAnswer('');
+
+      const response = await generateResponse(question);
+      if (!response) {
+        setLoading(false);
+        return;
+      }
+
+      if (!isValidResponse(response)) {
+        alert('This question is not related to the selected curriculum, subject, or grade.');
+        setLoading(false);
+        return;
+      }
+
+      setAnswer(formatResponse(response));
       setLoading(false);
-      return;
+    } else {
+      setAnswer('Please ask about specific courses or projects, and I will be happy to help!');
     }
-
-    if (!isValidResponse(response)) {
-      alert('This question is not related to the selected curriculum, subject, or grade.');
-      setLoading(false);
-      return;
-    }
-
-    setAnswer(formatResponse(response));
-    setLoading(false);
   };
 
   return (

@@ -4,7 +4,7 @@ import axios from 'axios';
 import DOMPurify from 'dompurify';
 import './LessonPlan.css';
 
-const LessonPlan = () => {
+const Lessonplan = () => {
   const [pdfFile, setPdfFile] = useState(null);
   const [classDuration, setClassDuration] = useState('');
   const [teachingStyle, setTeachingStyle] = useState('');
@@ -158,4 +158,4 @@ const LessonPlan = () => {
   );
 };
 
-export default LessonPlan;
+export default Lessonplan;

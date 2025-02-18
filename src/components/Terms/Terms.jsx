@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PDFDownloadLink, Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer';
 import axios from 'axios';
@@ -49,6 +49,28 @@ const Terms = () => {
   const [selectedSubject, setSelectedSubject] = useState('');
   const [selectedGrade, setSelectedGrade] = useState('');
   const [selectedTerms, setSelectedTerms] = useState('');
+  const [projects, setProjects] = useState([]);
+  const [assessmentCriteria, setAssessmentCriteria] = useState([]);
+  const [selectedProject, setSelectedProject] = useState('');
+  const [selectedCriteria, setSelectedCriteria] = useState('');
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      const response = await fetch('https://apis.earlyagedevelopment.com/api/projects');
+      const data = await response.json();
+      setProjects(data);
+    };
+    fetchProjects();
+  }, []);
+
+  useEffect(() => {
+    const fetchAssessmentCriteria = async () => {
+      const response = await fetch('https://apis.earlyagedevelopment.com/api/assessment-criteria');
+      const data = await response.json();
+      setAssessmentCriteria(data);
+    };
+    fetchAssessmentCriteria();
+  }, []);
 
   const curriculumOptions = [
     { id: 'ontario', name: 'Ontario Curriculum' },
@@ -108,6 +130,39 @@ const Terms = () => {
         <h1>Create Your Curriculum Plan</h1>
 
         <form onSubmit={handleGeneratePlan}>
+          <div className="dropdown-section">
+            <label htmlFor="projectSelect">Select Project:</label>
+            <select
+              id="projectSelect"
+              value={selectedProject}
+              onChange={(e) => setSelectedProject(e.target.value)}
+              required
+            >
+              <option value="">Select Project</option>
+              {projects.map((project) => (
+                <option key={project.id} value={project.id}>
+                  <img src={project.project_picture} alt={project.project_title} style={{ borderRadius: '50%', width: '20px', height: '20px', marginRight: '5px' }} />
+                  {project.project_title}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="dropdown-section">
+            <label htmlFor="criteriaSelect">Select Assessment Criteria:</label>
+            <select
+              id="criteriaSelect"
+              value={selectedCriteria}
+              onChange={(e) => setSelectedCriteria(e.target.value)}
+              required
+            >
+              <option value="">Select Criteria</option>
+              {assessmentCriteria.map((criteria) => (
+                <option key={criteria.id} value={criteria.id}>{criteria.name}</option>
+              ))}
+            </select>
+          </div>
+
           <div className="dropdown-section">
             <label htmlFor="curriculum">Select Curriculum:</label>
             <select

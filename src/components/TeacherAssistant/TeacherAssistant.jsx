@@ -102,7 +102,11 @@ Format your responses using HTML tags for better readability:
 - Wrap tips in <div class="tip">...</div>
 - Wrap notes in <div class="note">...</div>
 
-Make your responses visually appealing and easy to read. Use appropriate headings and structure to organize the information clearly.`
+Make your responses visually appealing and easy to read. Use appropriate headings and structure to organize the information clearly.
+
+When responding to questions, please be engaging, professional, and empathetic. Use a tone that is approachable, yet informative. Provide clear explanations and examples to help teachers understand the concepts. If necessary, offer suggestions for further learning or resources.
+
+Please respond in a way that is respectful and considerate of the teacher's time and expertise. Avoid using jargon or technical terms that may be unfamiliar to non-experts. Instead, focus on providing practical advice and guidance that can be applied in the classroom.`
             },
             {
               role: 'user',
@@ -137,33 +141,46 @@ Make your responses visually appealing and easy to read. Use appropriate heading
   };
 
   const handleSubmit = async (e) => {
-    if (e) {
-      e.preventDefault();
-    }
+    e.preventDefault();
 
     if (!selectedCurriculum || !selectedSubject || !selectedGrade) {
-      alert('Please select curriculum, subject, and grade before asking a question.');
+      alert('Please select the curriculum, subject, and grade before asking a question. I am here to assist you!');
       return;
     }
 
-    setLoading(true);
-    setError('');
-    setAnswer('');
+    const greetingKeywords = ['hello', 'hi', 'hey'];
+    const isGreeting = greetingKeywords.some(keyword => question.toLowerCase().includes(keyword));
 
-    const response = await generateResponse(question);
-    if (!response) {
+    if (isGreeting) {
+      setAnswer('Welcome! How can I assist you today? Feel free to ask any questions.');
+      return;
+    }
+
+    const specificKeywords = ['course', 'project', 'assignment'];
+    const isSpecificRequest = specificKeywords.some(keyword => question.toLowerCase().includes(keyword));
+
+    if (isSpecificRequest) {
+      setLoading(true);
+      setError('');
+      setAnswer('');
+
+      const response = await generateResponse(question);
+      if (!response) {
+        setLoading(false);
+        return;
+      }
+
+      if (!isValidResponse(response)) {
+        alert('This question is not related to the selected curriculum, subject, or grade.');
+        setLoading(false);
+        return;
+      }
+
+      setAnswer(formatResponse(response));
       setLoading(false);
-      return;
+    } else {
+      setAnswer('Please ask about specific courses or projects, and I will be happy to help!');
     }
-
-    if (!isValidResponse(response)) {
-      alert('This question is not related to the selected curriculum, subject, or grade.');
-      setLoading(false);
-      return;
-    }
-
-    setAnswer(formatResponse(response));
-    setLoading(false);
   };
 
   return (
