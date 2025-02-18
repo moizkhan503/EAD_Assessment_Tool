@@ -102,11 +102,15 @@ Format your responses using HTML tags for better readability:
 - Wrap tips in <div class="tip">...</div>
 - Wrap notes in <div class="note">...</div>
 
+<<<<<<< HEAD
 Make your responses visually appealing and easy to read. Use appropriate headings and structure to organize the information clearly.
 
 When responding to questions, please be engaging, professional, and empathetic. Use a tone that is approachable, yet informative. Provide clear explanations and examples to help teachers understand the concepts. If necessary, offer suggestions for further learning or resources.
 
 Please respond in a way that is respectful and considerate of the teacher's time and expertise. Avoid using jargon or technical terms that may be unfamiliar to non-experts. Instead, focus on providing practical advice and guidance that can be applied in the classroom.`
+=======
+Make your responses visually appealing and easy to read. Use appropriate headings and structure to organize the information clearly.`
+>>>>>>> origin/main
             },
             {
               role: 'user',
@@ -141,6 +145,7 @@ Please respond in a way that is respectful and considerate of the teacher's time
   };
 
   const handleSubmit = async (e) => {
+<<<<<<< HEAD
     e.preventDefault();
 
     if (!selectedCurriculum || !selectedSubject || !selectedGrade) {
@@ -181,6 +186,35 @@ Please respond in a way that is respectful and considerate of the teacher's time
     } else {
       setAnswer('Please ask about specific courses or projects, and I will be happy to help!');
     }
+=======
+    if (e) {
+      e.preventDefault();
+    }
+
+    if (!selectedCurriculum || !selectedSubject || !selectedGrade) {
+      alert('Please select curriculum, subject, and grade before asking a question.');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+    setAnswer('');
+
+    const response = await generateResponse(question);
+    if (!response) {
+      setLoading(false);
+      return;
+    }
+
+    if (!isValidResponse(response)) {
+      alert('This question is not related to the selected curriculum, subject, or grade.');
+      setLoading(false);
+      return;
+    }
+
+    setAnswer(formatResponse(response));
+    setLoading(false);
+>>>>>>> origin/main
   };
 
   return (

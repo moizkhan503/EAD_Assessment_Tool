@@ -1,12 +1,24 @@
+<<<<<<< HEAD
 import React, { useState } from 'react';
 import { ChatGroq } from '@langchain/groq';
 import * as pdfjsLib from 'pdfjs-dist';
 import './Assessment.css';
+=======
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { ChatGroq } from '@langchain/groq';
+import * as pdfjsLib from 'pdfjs-dist';
+import './Assessment.css';
+import AssessmentCharts from './AssessmentCharts';
+>>>>>>> origin/main
 
 // Initialize PDF.js worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
+<<<<<<< HEAD
 // Initialize the ChatGroq model
+=======
+>>>>>>> origin/main
 const model = new ChatGroq({
   model: 'mixtral-8x7b-32768',
   temperature: 0.5,
@@ -14,6 +26,7 @@ const model = new ChatGroq({
 });
 
 const Assessment = () => {
+<<<<<<< HEAD
   const [inputText, setInputText] = useState('');
   const [pdfFile, setPdfFile] = useState(null);
   const [mcqs, setMcqs] = useState([]);
@@ -40,6 +53,125 @@ const Assessment = () => {
         return [...prev, type];
       }
     });
+=======
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { project, criteria } = location.state || {};
+
+  const [mcqs, setMcqs] = useState([]);
+  const [selectedAnswers, setSelectedAnswers] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [deliverables, setDeliverables] = useState({});
+  const [evaluation, setEvaluation] = useState(null);
+  const [showResults, setShowResults] = useState(false);
+  const [isEvaluating, setIsEvaluating] = useState(false);
+  const [aiOpinion, setAiOpinion] = useState('');
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  useEffect(() => {
+    if (!project || !criteria) {
+      navigate('/terms');
+      return;
+    }
+    generateMCQs();
+  }, [project, criteria]);
+
+  const generateMCQs = async () => {
+    try {
+      const prompt = `Generate 10 multiple choice questions (MCQs) for assessing knowledge of ${project.title}. 
+        The assessment criteria is: ${criteria.name}.
+
+        Return the MCQs in the following JSON format:
+        {
+          "mcqs": [
+            {
+              "question": "Question text here",
+              "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
+              "correctAnswer": 0,
+              "explanation": "Explanation for the correct answer"
+            }
+          ]
+        }
+
+        Requirements:
+        1. Generate EXACTLY 10 questions
+        2. Each question MUST have EXACTLY 4 options
+        3. correctAnswer MUST be a number from 0-3 indicating the index of the correct option
+        4. Focus on testing understanding of core concepts
+        5. Return ONLY valid JSON with NO special characters or line breaks in strings
+        6. Escape all quotes within strings
+        7. Keep questions and options concise
+        8. Do not include any text outside the JSON structure`;
+
+      try {
+        const response = await model.call([
+          { role: 'system', content: prompt },
+          { role: 'user', content: 'Generate MCQs in the specified JSON format.' }
+        ]);
+
+        // First, clean the response to ensure it only contains the JSON part
+        const jsonStr = response.content.trim().replace(/^[^{]*/, '').replace(/[^}]*$/, '');
+        
+        // Try to parse the cleaned JSON
+        const parsedResponse = JSON.parse(jsonStr);
+        
+        if (!parsedResponse.mcqs || !Array.isArray(parsedResponse.mcqs)) {
+          throw new Error('Invalid MCQ format: mcqs array not found');
+        }
+        
+        // Validate and sanitize each MCQ
+        const validatedMcqs = parsedResponse.mcqs.map((mcq, index) => {
+          // Ensure all strings are properly sanitized
+          const sanitizeStr = (str) => String(str).replace(/[\x00-\x1F\x7F-\x9F]/g, '');
+          
+          return {
+            id: index + 1,
+            question: sanitizeStr(mcq.question) || `Question ${index + 1}`,
+            options: Array.isArray(mcq.options) 
+              ? mcq.options.map(sanitizeStr).slice(0, 4) 
+              : ['Option A', 'Option B', 'Option C', 'Option D'],
+            correctAnswer: typeof mcq.correctAnswer === 'number' && mcq.correctAnswer >= 0 && mcq.correctAnswer <= 3 
+              ? mcq.correctAnswer 
+              : 0,
+            explanation: sanitizeStr(mcq.explanation) || 'No explanation provided'
+          };
+        });
+
+        if (validatedMcqs.length !== 10) {
+          throw new Error(`Expected 10 MCQs, but got ${validatedMcqs.length}`);
+        }
+
+        setMcqs(validatedMcqs);
+        setError(null);
+      } catch (error) {
+        console.error('Error in MCQ generation:', error);
+        setError(`Failed to generate MCQs: ${error.message}. Please try again.`);
+        
+        // Fallback MCQs with project-specific questions
+        const fallbackMcqs = Array(5).fill(null).map((_, index) => ({
+          id: index + 1,
+          question: `Sample Question ${index + 1} about ${project.title}?`,
+          options: ['Option A', 'Option B', 'Option C', 'Option D'],
+          correctAnswer: 0,
+          explanation: 'This is a sample question.'
+        }));
+        setMcqs(fallbackMcqs);
+      }
+      setLoading(false);
+    } catch (err) {
+      console.error('Error generating MCQs:', err);
+      setError('Failed to generate questions. Please try again.');
+      setLoading(false);
+    }
+  };
+
+  const handleAnswerSelect = (questionId, answer) => {
+    setSelectedAnswers(prev => ({
+      ...prev,
+      [questionId]: answer
+    }));
+>>>>>>> origin/main
   };
 
   const extractTextFromPdf = async (file) => {
@@ -58,6 +190,7 @@ const Assessment = () => {
       return fullText.trim();
     } catch (error) {
       console.error('Error extracting text from PDF:', error);
+<<<<<<< HEAD
       throw new Error('Failed to read PDF content. Please try a different file.');
     }
   };
@@ -646,6 +779,241 @@ const Assessment = () => {
             </button>
           </div>
         )}
+=======
+      throw new Error('Failed to read PDF content');
+    }
+  };
+
+  const handleDeliverableUpload = async (deliverableType, file) => {
+    try {
+      const text = await extractTextFromPdf(file);
+      setDeliverables(prev => ({
+        ...prev,
+        [deliverableType]: { file, text }
+      }));
+    } catch (error) {
+      setError('Error reading PDF file. Please try again.');
+    }
+  };
+
+  const evaluateSubmission = async () => {
+    setIsEvaluating(true);
+    try {
+      const deliverableTexts = Object.values(deliverables).map(d => d.text).join('\n\n');
+      
+      const prompt = `
+        You are an expert assessment evaluator. Evaluate this submission based on:
+
+        Project: ${project.title}
+        Assessment Criteria: ${criteria.name}
+        Objective: ${criteria.objective}
+        Tasks: ${criteria.tasks}
+        Rubrics: ${JSON.stringify(criteria.rubrics)}
+
+        MCQ Answers: ${JSON.stringify(selectedAnswers)}
+        Deliverable Content: ${deliverableTexts}
+
+        Provide evaluation in this JSON format:
+        {
+          "mcq_evaluation": {
+            "score": "X/10",
+            "feedback": "Detailed feedback"
+          },
+          "rubric_evaluation": [
+            {
+              "criteria": "Criteria Name",
+              "level": "Achieved Level",
+              "score": "X/10",
+              "feedback": "Detailed feedback"
+            }
+          ],
+          "total_score": "X/30",
+          "improvement_suggestions": [
+            "Detailed suggestions"
+          ],
+          "ai_opinion": "Comprehensive analysis and recommendations"
+        }
+      `;
+
+      const response = await model.call([
+        { role: 'system', content: prompt },
+        { role: 'user', content: 'Evaluate the submission now.' }
+      ]);
+
+      const result = JSON.parse(response.content);
+      setEvaluation(result);
+      setAiOpinion(result.ai_opinion);
+      setShowResults(true);
+    } catch (err) {
+      setError('Error evaluating submission. Please try again.');
+    } finally {
+      setIsEvaluating(false);
+    }
+  };
+
+  const playAiOpinion = () => {
+    if ('speechSynthesis' in window) {
+      const speech = new SpeechSynthesisUtterance(aiOpinion);
+      speech.onend = () => setIsPlaying(false);
+      setIsPlaying(true);
+      window.speechSynthesis.speak(speech);
+    }
+  };
+
+  const stopAiOpinion = () => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      setIsPlaying(false);
+    }
+  };
+
+  if (loading) return <div className="loading">Generating assessment questions...</div>;
+  if (error) return <div className="error">{error}</div>;
+
+  if (showResults) {
+    return (
+      <div className="assessment-container">
+        <div className="results-header">
+          <h2>Assessment Results</h2>
+          <h3>{project.title}</h3>
+          <p className="criteria-name">{criteria.name}</p>
+        </div>
+
+        <div className="results-content">
+          {showResults && evaluation && (
+            <div className="results-container">
+              {/* Charts Section */}
+              <AssessmentCharts evaluation={evaluation} />
+
+              <div className="score-overview">
+                <h3>Total Score: {evaluation.total_score}</h3>
+              </div>
+
+              <div className="evaluation-section">
+                <h3>MCQ Evaluation</h3>
+                <div className="evaluation-card">
+                  <p className="score">Score: {evaluation.mcq_evaluation.score}</p>
+                  <p className="feedback">{evaluation.mcq_evaluation.feedback}</p>
+                </div>
+              </div>
+
+              <div className="evaluation-section">
+                <h3>Rubric Evaluation</h3>
+                <div className="rubric-table">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Criteria</th>
+                        <th>Level</th>
+                        <th>Score</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {evaluation.rubric_evaluation.map((item, index) => (
+                        <tr key={index}>
+                          <td>{item.criteria}</td>
+                          <td>{item.level}</td>
+                          <td>{item.score}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div className="improvement-section">
+                <h3>Areas for Improvement</h3>
+                <ul>
+                  {evaluation.improvement_suggestions.map((suggestion, index) => (
+                    <li key={index}>{suggestion}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="ai-opinion-section">
+                <h3>AI Opinion</h3>
+                <div className="ai-opinion-content">
+                  <p>{aiOpinion}</p>
+                  <button 
+                    className="voice-button"
+                    onClick={isPlaying ? stopAiOpinion : playAiOpinion}
+                  >
+                    {isPlaying ? 'Stop AI Voice' : 'Play AI Voice'}
+                  </button>
+                </div>
+              </div>
+
+              <button 
+                className="new-assessment-button"
+                onClick={() => navigate('/terms')}
+              >
+                Start New Assessment
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="assessment-container">
+      <div className="assessment-header">
+        <h2>{project.title}</h2>
+        <p className="criteria-name">{criteria.name}</p>
+      </div>
+
+      <div className="assessment-content">
+        <div className="mcq-section">
+          <h3>Multiple Choice Questions</h3>
+          {mcqs.map((mcq, index) => (
+            <div key={mcq.id} className="question-card">
+              <h4>Question {index + 1}</h4>
+              <p>{mcq.question}</p>
+              <div className="options">
+                {mcq.options.map((option, optIndex) => (
+                  <label key={optIndex} className="option-label">
+                    <input
+                      type="radio"
+                      name={`question-${mcq.id}`}
+                      value={optIndex}
+                      checked={selectedAnswers[mcq.id] === optIndex}
+                      onChange={() => handleAnswerSelect(mcq.id, optIndex)}
+                    />
+                    {option}
+                  </label>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="deliverables-section">
+          <h3>Upload Deliverables</h3>
+          {criteria.deliverables.map((deliverable, index) => (
+            <div key={index} className="deliverable-item">
+              <p>{deliverable}</p>
+              <input
+                type="file"
+                onChange={(e) => handleDeliverableUpload(index, e.target.files[0])}
+                accept=".pdf"
+              />
+            </div>
+          ))}
+        </div>
+
+        <button 
+          className="submit-button"
+          onClick={evaluateSubmission}
+          disabled={
+            isEvaluating || 
+            Object.keys(selectedAnswers).length !== mcqs.length ||
+            Object.keys(deliverables).length !== criteria.deliverables.length
+          }
+        >
+          {isEvaluating ? 'Evaluating...' : 'Submit for Evaluation'}
+        </button>
+>>>>>>> origin/main
       </div>
     </div>
   );

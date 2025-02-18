@@ -72,6 +72,7 @@ const StudentAssistant = () => {
 
   const generateResponse = async (question) => {
     try {
+<<<<<<< HEAD
       const prompt = `As a student learning assistant for ${selectedSubject} Grade ${selectedGrade} in the ${selectedCurriculum} curriculum, I'd be happy to help with your question. Please provide a clear and concise response that addresses the student's query. 
 
 Format your responses using HTML tags for better readability:
@@ -92,6 +93,9 @@ Format your responses using HTML tags for better readability:
 Please ensure your response is visually appealing, easy to read, and addresses the student's question directly.
 
 Here is the student's question: ${question}`;
+=======
+      const prompt = `As a student learning assistant for ${selectedSubject} Grade ${selectedGrade} in the ${selectedCurriculum} curriculum, please help with this question: ${question}`;
+>>>>>>> origin/main
 
       const response = await fetch(GROQ_API_URL, {
         method: 'POST',
@@ -127,7 +131,11 @@ Please ensure your response is formatted with a white background, black text, he
 `
             },
             {
+<<<<<<< HEAD
               role: 'assistant',
+=======
+              role: 'user',
+>>>>>>> origin/main
               content: prompt
             }
           ],
@@ -162,6 +170,7 @@ Please ensure your response is formatted with a white background, black text, he
     e.preventDefault();
 
     if (!selectedCurriculum || !selectedSubject || !selectedGrade) {
+<<<<<<< HEAD
       alert('Please select the curriculum, subject, and grade before asking a question. I am here to assist you!');
       return;
     }
@@ -199,6 +208,30 @@ Please ensure your response is formatted with a white background, black text, he
     } else {
       setAnswer('Please ask about specific courses or projects, and I will be happy to help!');
     }
+=======
+      alert('Please select curriculum, subject, and grade before asking a question.');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+    setAnswer('');
+
+    const response = await generateResponse(question);
+    if (!response) {
+      setLoading(false);
+      return;
+    }
+
+    if (!isValidResponse(response)) {
+      alert('This question is not related to the selected curriculum, subject, or grade.');
+      setLoading(false);
+      return;
+    }
+
+    setAnswer(formatResponse(response));
+    setLoading(false);
+>>>>>>> origin/main
   };
 
   return (

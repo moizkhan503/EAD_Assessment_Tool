@@ -338,6 +338,7 @@ h1 {
   color: #00796b;
 }
 
+<<<<<<< HEAD
 .student-assistant {
   background-color: #f9f9f9;
   color: #333;
@@ -395,6 +396,8 @@ h1 {
   background-color: #bdbdbd;
 }
 
+=======
+>>>>>>> origin/main
 @media (max-width: 768px) {
   .content {
     padding: 20px;

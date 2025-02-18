@@ -12,6 +12,10 @@ body {
   padding: 20px;
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/main
 .content {
   background: white;
   border-radius: 16px;
@@ -355,6 +359,7 @@ select:focus {
 }
 
 .teacher-assistant {
+<<<<<<< HEAD
   background-color: #f9f9f9;
   color: #333;
   font-family: 'Arial', sans-serif;
@@ -409,6 +414,21 @@ select:focus {
 
 .voice-button:hover {
   background-color: #bdbdbd;
+=======
+  background-color: white;
+  color: black;
+  padding: 20px;
+}
+
+.main-heading {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.sub-heading {
+  font-size: 20px;
+  margin-top: 10px;
+>>>>>>> origin/main
 }
 
 table.data-table {

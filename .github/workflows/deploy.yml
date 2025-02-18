@@ -15,16 +15,33 @@ jobs:
         
       - name: Install Dependencies
         run: npm install
+<<<<<<< HEAD
         # Step 3: Build the React Project
       - name: Build React Project
         run: npm run build
+=======
+        
+      - name: Build React Project
+        run: npm run build
+        env:
+          VITE_APP_URL: https://dev.earlyagedevelopment.com
+>>>>>>> origin/main
 
       - name: Deploy to Plesk via FTP
         uses: SamKirkland/ftp-deploy-action@v4.3.5
         with:
+<<<<<<< HEAD
           server:  ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./build/ # Update if needed (e.g., `./dist` for built files)
           server-dir: ./ # Path in Plesk server
           
+=======
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./build/
+          server-dir: /httpdocs/
+          dangerous-clean-slate: true
+>>>>>>> origin/main

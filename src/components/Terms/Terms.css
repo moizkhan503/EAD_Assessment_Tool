@@ -28,6 +28,7 @@
 }
 
 .form-group {
+<<<<<<< HEAD
   margin-bottom: 1.5rem;
 }
 
@@ -54,6 +55,55 @@
   outline: none;
   border-color: #4a90e2;
   box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
+=======
+  margin-bottom: 15px;
+}
+
+.custom-select {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.selected-project {
+  display: flex;
+  align-items: center;
+}
+
+.project-thumbnail {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+select {
+  background-color: white;
+  cursor: pointer;
+}
+
+select:hover {
+  border-color: #999;
+}
+
+.dropdown-section {
+  margin: 20px 0;
+>>>>>>> origin/main
 }
 
 .generate-btn {

@@ -10,7 +10,11 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh; /* Full height of the viewport */
+<<<<<<< HEAD
   padding: 20px;
+=======
+  padding: 2px;
+>>>>>>> origin/main
 }
 
 .content {
@@ -185,4 +189,121 @@ span {
 
 .submit-button:hover {
   background-color: #004d40; /* Darker teal on hover */
+<<<<<<< HEAD
+=======
+}
+
+.lesson-plan {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.assessment-header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.assessment-header h2 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.criteria {
+  margin: 10px 0 0;
+  color: #666;
+  font-size: 16px;
+}
+
+.mcq-container {
+  margin-top: 20px;
+}
+
+.mcq-question {
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.mcq-question h3 {
+  margin: 0 0 15px;
+  color: #2c3e50;
+  font-size: 18px;
+  font-weight: 600;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 8px;
+}
+
+.question-content {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.question-text {
+  font-weight: 500;
+  color: #2c3e50;
+  margin-bottom: 15px;
+}
+
+.option {
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  padding: 10px 15px;
+  margin: 8px 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.option:hover {
+  background-color: #e9ecef;
+  border-color: #dee2e6;
+}
+
+.correct-answer {
+  margin-top: 15px;
+  padding: 12px 15px;
+  background-color: #e8f5e9;
+  border-radius: 4px;
+  color: #2e7d32;
+  font-weight: 500;
+  border-left: 4px solid #2e7d32;
+}
+
+.back-button {
+  display: block;
+  margin: 30px auto;
+  padding: 12px 24px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.2s;
+  font-weight: 500;
+}
+
+.back-button:hover {
+  background-color: #2980b9;
+}
+
+.error-message {
+  text-align: center;
+  color: #e74c3c;
+  margin: 20px 0;
+  padding: 20px;
+  background-color: #fdf0ed;
+  border-radius: 8px;
+  border: 1px solid #fadbd8;
+>>>>>>> origin/main
 }
