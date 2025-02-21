@@ -12,10 +12,6 @@ body {
   padding: 20px;
 }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/main
 .content {
   background: white;
   border-radius: 16px;
@@ -219,105 +215,24 @@ select:focus {
 .answer-box h1 {
   color: #00796b;
   font-size: 2rem;
-  margin: 1.5rem 0 1rem;
-  border-bottom: 2px solid #00796b;
-  padding-bottom: 0.5rem;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
 .answer-box h2 {
-  color: #00695c;
+  color: #00796b;
   font-size: 1.5rem;
-  margin: 1.25rem 0 0.75rem;
-  border-left: 4px solid #00796b;
-  padding-left: 1rem;
-}
-
-.answer-box h3 {
-  color: #004d40;
-  font-size: 1.25rem;
-  margin: 1rem 0 0.5rem;
+  margin-bottom: 15px;
 }
 
 .answer-box p {
-  margin: 0.75rem 0;
-  line-height: 1.8;
-}
-
-.answer-box ul, .answer-box ol {
-  margin: 1rem 0;
-  padding-left: 2rem;
-}
-
-.answer-box li {
-  margin: 0.5rem 0;
-  line-height: 1.6;
-}
-
-.answer-box strong {
-  color: #00695c;
-  font-weight: 600;
-}
-
-.answer-box em {
-  color: #004d40;
-  font-style: italic;
-}
-
-.answer-box blockquote {
-  margin: 1rem 0;
-  padding: 1rem;
-  background-color: #b2dfdb;
-  border-left: 4px solid #00796b;
-  border-radius: 4px;
-  font-style: italic;
-}
-
-.answer-box code {
-  background-color: #b2dfdb;
-  padding: 0.2rem 0.4rem;
-  border-radius: 4px;
-  font-family: monospace;
-  font-size: 0.9rem;
-}
-
-.answer-box pre {
-  background-color: #b2dfdb;
-  padding: 1rem;
-  border-radius: 8px;
-  overflow-x: auto;
-  margin: 1rem 0;
-}
-
-.answer-box table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 1rem 0;
-  background-color: #fff;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.answer-box th, .answer-box td {
-  padding: 0.75rem 1rem;
-  border: 1px solid #b2dfdb;
-  text-align: left;
-}
-
-.answer-box th {
-  background-color: #00796b;
-  color: white;
-  font-weight: 600;
-}
-
-.answer-box tr:nth-child(even) {
-  background-color: #e0f2f1;
+  margin-bottom: 15px;
 }
 
 .answer-box a {
   color: #00796b;
   text-decoration: none;
-  border-bottom: 1px dotted #00796b;
-  transition: all 0.3s ease;
+  transition: color 0.3s ease;
 }
 
 .answer-box a:hover {
@@ -358,89 +273,115 @@ select:focus {
   color: #00796b;
 }
 
-.teacher-assistant {
-<<<<<<< HEAD
-  background-color: #f9f9f9;
-  color: #333;
-  font-family: 'Arial', sans-serif;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.main-heading {
-  font-size: 28px;
-  font-weight: bold;
-  color: #00796b;
-  margin-bottom: 10px;
-}
-
-.sub-heading {
-  font-size: 22px;
-  margin-top: 10px;
-  color: #555;
-}
-
-.question-input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  margin-bottom: 10px;
-}
-
-.submit-button {
-  background-color: #00796b;
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.submit-button:hover {
-  background-color: #005f57;
-}
-
-.voice-button {
-  background-color: #e0e0e0;
-  color: #333;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-left: 10px;
-}
-
-.voice-button:hover {
-  background-color: #bdbdbd;
-=======
-  background-color: white;
-  color: black;
-  padding: 20px;
-}
-
-.main-heading {
-  font-size: 24px;
-  font-weight: bold;
-}
-
-.sub-heading {
-  font-size: 20px;
-  margin-top: 10px;
->>>>>>> origin/main
-}
-
-table.data-table {
+.answer-box table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
+  margin: 1rem 0;
+  background-color: #fff;
+  border: 2px solid #00796b;
 }
 
-table.data-table th, table.data-table td {
-  border: 1px solid black;
+.answer-box th, .answer-box td {
+  border: 1px solid #b2dfdb;
   padding: 10px;
   text-align: left;
+}
+
+.answer-box th {
+  background-color: #e0f2f1;
+  color: #00796b;
+  font-weight: 600;
+}
+
+.answer-box tr:nth-child(even) {
+  background-color: #e0f2f1;
+}
+
+.teacher-assistant-section {
+  margin-top: 30px;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.teacher-assistant-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.teacher-assistant-title {
+  color: #00796b;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.teacher-assistant-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.teacher-assistant-action {
+  background-color: #00796b;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
+}
+
+.teacher-assistant-action:hover {
+  background-color: #004d40;
+}
+
+.lesson-plan-section {
+  margin-top: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+}
+
+.lesson-plan-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.lesson-plan-title {
+  color: #00796b;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.lesson-plan-content {
+  color: #333;
+  line-height: 1.6;
+}
+
+.lesson-plan-warning {
+  background-color: #fdf0ed;
+  border-radius: 8px;
+  border: 1px solid #fadbd8;
+  padding: 10px;
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lesson-plan-warning-icon {
+  color: #ff5722;
+}
+
+.lesson-plan-warning-text {
+  font-size: 0.9rem;
+  color: #333;
 }
 
 @media (max-width: 768px) {
@@ -459,5 +400,10 @@ table.data-table th, table.data-table td {
   .button {
     padding: 12px;
     font-size: 1rem;
+  }
+
+  .teacher-assistant-action {
+    padding: 6px 12px;
+    font-size: 0.8rem;
   }
 }

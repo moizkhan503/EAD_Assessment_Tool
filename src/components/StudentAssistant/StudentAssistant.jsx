@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import DOMPurify from 'dompurify';
 import './StudentAssistant.css';
 
@@ -62,7 +62,7 @@ const StudentAssistant = () => {
   };
 
   // Cancel speech when component unmounts
-  React.useEffect(() => {
+  useEffect(() => {
     return () => {
       if (speechSynthesis) {
         speechSynthesis.cancel();
@@ -72,7 +72,6 @@ const StudentAssistant = () => {
 
   const generateResponse = async (question) => {
     try {
-<<<<<<< HEAD
       const prompt = `As a student learning assistant for ${selectedSubject} Grade ${selectedGrade} in the ${selectedCurriculum} curriculum, I'd be happy to help with your question. Please provide a clear and concise response that addresses the student's query. 
 
 Format your responses using HTML tags for better readability:
@@ -93,9 +92,6 @@ Format your responses using HTML tags for better readability:
 Please ensure your response is visually appealing, easy to read, and addresses the student's question directly.
 
 Here is the student's question: ${question}`;
-=======
-      const prompt = `As a student learning assistant for ${selectedSubject} Grade ${selectedGrade} in the ${selectedCurriculum} curriculum, please help with this question: ${question}`;
->>>>>>> origin/main
 
       const response = await fetch(GROQ_API_URL, {
         method: 'POST',
@@ -114,7 +110,7 @@ Format your responses using HTML tags for better readability:
 - Use <h1> for main topics
 - Use <h2> for subtopics
 - Use <h3> for section headings
-- Use <p> for paragraphs
+- Use <p> for               paragraphs
 - Use <strong> for emphasis
 - Use <em> for secondary emphasis
 - Use <ul> and <li> for unordered lists
@@ -127,15 +123,10 @@ Format your responses using HTML tags for better readability:
 
 Make your responses visually appealing and easy to read. Break down complex concepts into clear, well-organized sections with appropriate headings and structure.
 
-Please ensure your response is formatted with a white background, black text, headings, and tables.
-`
+Please ensure your response is formatted with a white background, black text, headings, and tables.`
             },
             {
-<<<<<<< HEAD
-              role: 'assistant',
-=======
               role: 'user',
->>>>>>> origin/main
               content: prompt
             }
           ],
@@ -157,8 +148,7 @@ Please ensure your response is formatted with a white background, black text, he
 
   const isValidResponse = (response) => {
     // Logic to check if response is related to selected curriculum, subject, and grade
-    // For now, just return true
-    return true;
+    return true; // For now, just return true
   };
 
   const formatResponse = (response) => {
@@ -167,49 +157,12 @@ Please ensure your response is formatted with a white background, black text, he
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    if (e) {
+      e.preventDefault();
+    }
 
     if (!selectedCurriculum || !selectedSubject || !selectedGrade) {
-<<<<<<< HEAD
       alert('Please select the curriculum, subject, and grade before asking a question. I am here to assist you!');
-      return;
-    }
-
-    const greetingKeywords = ['hello', 'hi', 'hey'];
-    const isGreeting = greetingKeywords.some(keyword => question.toLowerCase().includes(keyword));
-
-    if (isGreeting) {
-      setAnswer('Welcome! How can I assist you today? Feel free to ask any questions.');
-      return;
-    }
-
-    const specificKeywords = ['course', 'project', 'assignment'];
-    const isSpecificRequest = specificKeywords.some(keyword => question.toLowerCase().includes(keyword));
-
-    if (isSpecificRequest) {
-      setLoading(true);
-      setError('');
-      setAnswer('');
-
-      const response = await generateResponse(question);
-      if (!response) {
-        setLoading(false);
-        return;
-      }
-
-      if (!isValidResponse(response)) {
-        alert('This question is not related to the selected curriculum, subject, or grade.');
-        setLoading(false);
-        return;
-      }
-
-      setAnswer(formatResponse(response));
-      setLoading(false);
-    } else {
-      setAnswer('Please ask about specific courses or projects, and I will be happy to help!');
-    }
-=======
-      alert('Please select curriculum, subject, and grade before asking a question.');
       return;
     }
 
@@ -231,7 +184,6 @@ Please ensure your response is formatted with a white background, black text, he
 
     setAnswer(formatResponse(response));
     setLoading(false);
->>>>>>> origin/main
   };
 
   return (
@@ -301,7 +253,7 @@ Please ensure your response is formatted with a white background, black text, he
             {loading ? 'Getting Answer...' : 'Ask Question'}
           </button>
           <button onClick={handleVoiceInput} className="voice-button">
-            {isVoiceInput ? "Listening..." : "Ask Question by Voice"}
+          {isVoiceInput ? "Listening..." : "Ask Question by Voice"}
           </button>
         </form>
 

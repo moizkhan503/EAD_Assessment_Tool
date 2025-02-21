@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import DOMPurify from 'dompurify';
 import './TeacherAssistant.css';
 
@@ -62,7 +62,7 @@ const TeacherAssistant = () => {
   };
 
   // Cancel speech when component unmounts
-  React.useEffect(() => {
+  useEffect(() => {
     return () => {
       if (speechSynthesis) {
         speechSynthesis.cancel();
@@ -92,25 +92,7 @@ Format your responses using HTML tags for better readability:
 - Use <h2> for subtopics
 - Use <h3> for section headings
 - Use <p> for paragraphs
-- Use <strong> for emphasis
-- Use <em> for secondary emphasis
-- Use <ul> and <li> for unordered lists
-- Use <ol> and <li> for ordered lists
-- Use <blockquote> for important quotes or key points
-- Use <code> for any code or specific terms
-- Create tables using <table>, <tr>, <th>, and <td> when presenting structured data
-- Wrap tips in <div class="tip">...</div>
-- Wrap notes in <div class="note">...</div>
-
-<<<<<<< HEAD
-Make your responses visually appealing and easy to read. Use appropriate headings and structure to organize the information clearly.
-
-When responding to questions, please be engaging, professional, and empathetic. Use a tone that is approachable, yet informative. Provide clear explanations and examples to help teachers understand the concepts. If necessary, offer suggestions for further learning or resources.
-
-Please respond in a way that is respectful and considerate of the teacher's time and expertise. Avoid using jargon or technical terms that may be unfamiliar to non-experts. Instead, focus on providing practical advice and guidance that can be applied in the classroom.`
-=======
-Make your responses visually appealing and easy to read. Use appropriate headings and structure to organize the information clearly.`
->>>>>>> origin/main
+              `
             },
             {
               role: 'user',
@@ -135,8 +117,7 @@ Make your responses visually appealing and easy to read. Use appropriate heading
 
   const isValidResponse = (response) => {
     // Logic to check if response is related to selected curriculum, subject, and grade
-    // For now, just return true
-    return true;
+    return true; // For now, just return true
   };
 
   const formatResponse = (response) => {
@@ -145,48 +126,6 @@ Make your responses visually appealing and easy to read. Use appropriate heading
   };
 
   const handleSubmit = async (e) => {
-<<<<<<< HEAD
-    e.preventDefault();
-
-    if (!selectedCurriculum || !selectedSubject || !selectedGrade) {
-      alert('Please select the curriculum, subject, and grade before asking a question. I am here to assist you!');
-      return;
-    }
-
-    const greetingKeywords = ['hello', 'hi', 'hey'];
-    const isGreeting = greetingKeywords.some(keyword => question.toLowerCase().includes(keyword));
-
-    if (isGreeting) {
-      setAnswer('Welcome! How can I assist you today? Feel free to ask any questions.');
-      return;
-    }
-
-    const specificKeywords = ['course', 'project', 'assignment'];
-    const isSpecificRequest = specificKeywords.some(keyword => question.toLowerCase().includes(keyword));
-
-    if (isSpecificRequest) {
-      setLoading(true);
-      setError('');
-      setAnswer('');
-
-      const response = await generateResponse(question);
-      if (!response) {
-        setLoading(false);
-        return;
-      }
-
-      if (!isValidResponse(response)) {
-        alert('This question is not related to the selected curriculum, subject, or grade.');
-        setLoading(false);
-        return;
-      }
-
-      setAnswer(formatResponse(response));
-      setLoading(false);
-    } else {
-      setAnswer('Please ask about specific courses or projects, and I will be happy to help!');
-    }
-=======
     if (e) {
       e.preventDefault();
     }
@@ -214,7 +153,6 @@ Make your responses visually appealing and easy to read. Use appropriate heading
 
     setAnswer(formatResponse(response));
     setLoading(false);
->>>>>>> origin/main
   };
 
   return (

@@ -4,25 +4,15 @@ import './Header.css';
 
 const Header = () => {
   const location = useLocation();
-<<<<<<< HEAD
 
-  const pages = [
+  const navItems = [
     { name: 'Terms', path: '/terms' },
     { name: 'Lesson Plan', path: '/lessonplan' },
     { name: 'Assessment', path: '/assessment' },
-=======
-  const navItems = [
-    { name: 'Assessment', path: '/terms' },
->>>>>>> origin/main
     { name: 'Teacher Assistant', path: '/teacher-assistant' },
     { name: 'Student Assistant', path: '/student-assistant' }
   ];
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> origin/main
   return (
     <header>
       <div className="top-header">
@@ -30,8 +20,6 @@ const Header = () => {
           <Link to="/" className="logo-link">
             <span className="ontario-text">Ontario</span>
           </Link>
-<<<<<<< HEAD
-=======
           <nav className="assistant-nav">
             <ul className="nav-list">
               {navItems.map((item, index) => (
@@ -46,7 +34,6 @@ const Header = () => {
               ))}
             </ul>
           </nav>
->>>>>>> origin/main
           <div className="header-right">
             <a href="#francais" className="language-toggle">Français</a>
             <button className="sign-in">
@@ -58,8 +45,7 @@ const Header = () => {
           </div>
         </div>
       </div>
-<<<<<<< HEAD
-      
+
       <div className="main-header">
         <div className="header-container">
           <h1 className="site-title">Lesson planning through curriculum</h1>
@@ -69,7 +55,7 @@ const Header = () => {
       <nav className="main-nav">
         <div className="header-container">
           <ul className="nav-list">
-            {pages.map((page, index) => (
+            {navItems.map((page, index) => (
               <li key={index}>
                 <Link 
                   to={page.path} 
@@ -82,8 +68,6 @@ const Header = () => {
           </ul>
         </div>
       </nav>
-=======
->>>>>>> origin/main
     </header>
   );
 };
