@@ -51,23 +51,6 @@ const Header = () => {
           <h1 className="site-title">Lesson planning through curriculum</h1>
         </div>
       </div>
-
-      <nav className="main-nav">
-        <div className="header-container">
-          <ul className="nav-list">
-            {navItems.map((page, index) => (
-              <li key={index}>
-                <Link 
-                  to={page.path} 
-                  className={location.pathname === page.path ? 'active' : ''}
-                >
-                  {page.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </nav>
     </header>
   );
 };
