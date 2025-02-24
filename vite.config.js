@@ -1,30 +1,28 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import path from 'path'
 
-// Get the directory name from the current module URL
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
-
+// https://vitejs.dev/config/
 export default defineConfig({
-  base: 'https://dev.earlyagedevelopment.com/',
   plugins: [react()],
-  assetsInclude: ['**/*.PNG'],
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'), // Correct usage of __dirname
-    },
-  },
   build: {
-    outDir: 'build', // Change this to 'build' if you want the output here
-    assetsDir: 'assets',
+    outDir: 'dist', // Changed from 'build' to 'dist'
+    emptyOutDir: true,
+    sourcemap: false,
     rollupOptions: {
       output: {
-        assetFileNames: 'assets/[name][extname]'
+        manualChunks: {
+          vendor: [
+            'react',
+            'react-dom',
+            'react-router-dom',
+            '@mui/material',
+            '@emotion/react',
+            '@emotion/styled'
+          ],
+          pdf: ['@react-pdf/renderer', 'pdfjs-dist'],
+          charts: ['chart.js', 'react-chartjs-2'],
+        }
       }
     }
-  },
-  server: {
-    port: 3000,
-    historyApiFallback: true
   }
-});
+})
