@@ -27,6 +27,7 @@ const Header = () => {
                   <Link 
                     to={item.path} 
                     className={location.pathname === item.path ? 'active' : ''}
+                    onClick={() => console.log('Navigating to:', item.name)}
                   >
                     {item.name}
                   </Link>
