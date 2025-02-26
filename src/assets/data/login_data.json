@@ -1,0 +1,32 @@
+{
+  "users": [
+    {
+      "username": "admin",
+      "password": "password123"
+    },
+    {
+      "username": "teacher",
+      "password": "teacher123"
+    },
+    {
+      "username": "student",
+      "password": "student123"
+    },
+    {
+      "username": "user1",
+      "password": "user1pass"
+    },
+    {
+      "username": "johndoe",
+      "password": "doe2025"
+    },
+    {
+      "username": "janedoe",
+      "password": "jane2025"
+    },
+    {
+      "username": "guest",
+      "password": "guest2025"
+    }
+  ]
+}

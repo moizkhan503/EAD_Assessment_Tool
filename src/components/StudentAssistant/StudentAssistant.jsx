@@ -1,11 +1,12 @@
 import React, { useState, useCallback, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import DOMPurify from 'dompurify';
 import './StudentAssistant.css';
 
-const GROQ_API_KEY = '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';
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
 const StudentAssistant = () => {
+  const navigate = useNavigate();
   const [selectedCurriculum, setSelectedCurriculum] = useState('');
   const [selectedSubject, setSelectedSubject] = useState('');
   const [selectedGrade, setSelectedGrade] = useState('');
@@ -17,6 +18,16 @@ const StudentAssistant = () => {
   const [isVoiceInput, setIsVoiceInput] = useState(false);
   const speechSynthesis = window.speechSynthesis;
   const [utterance, setUtterance] = useState(null);
+
+  // Check if API key exists when component loads
+  useEffect(() => {
+    const apiKey = localStorage.getItem('groqApiKey');
+    if (!apiKey || apiKey.trim() === '') {
+      // Show the API key modal
+      localStorage.setItem('showApiKeyModal', 'true');
+      navigate('/terms');
+    }
+  }, [navigate]);
 
   const handleSpeak = useCallback(() => {
     if (isSpeaking) {
@@ -72,6 +83,11 @@ const StudentAssistant = () => {
 
   const generateResponse = async (question) => {
     try {
+      const apiKey = localStorage.getItem('groqApiKey');
+      if (!apiKey || apiKey.trim() === '') {
+        throw new Error('API key is missing');
+      }
+
       const prompt = `As a student learning assistant for ${selectedSubject} Grade ${selectedGrade} in the ${selectedCurriculum} curriculum, I'd be happy to help with your question. Please provide a clear and concise response that addresses the student's query. 
 
 Format your responses using HTML tags for better readability:
@@ -96,7 +112,7 @@ Here is the student's question: ${question}`;
       const response = await fetch(GROQ_API_URL, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${GROQ_API_KEY}`,
+          'Authorization': `Bearer ${apiKey}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({

@@ -1,71 +1,81 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
 import './Footer.css';
+import logoImage from '../../assets/images/logo.png';
 
 const Footer = () => {
+  const currentYear = new Date().getFullYear();
+  
   return (
-    <footer className="footer">
-      <div className="footer-container">
-        <div className="footer-grid">
-          <div className="footer-section">
-            <h3>About Ontario Curriculum</h3>
-            <p>Empowering educators with modern tools to create, manage, and deliver exceptional learning experiences across Ontario.</p>
-          </div>
-
-          <div className="footer-section">
-            <h3>Quick Links</h3>
-            <ul>
-              <li><a href="#curriculum">Curriculum</a></li>
-              <li><a href="#assessment">Assessment</a></li>
-              <li><a href="#resources">Resources</a></li>
-              <li><a href="#contact">Contact Us</a></li>
-            </ul>
-          </div>
-
-          <div className="footer-section">
-            <h3>Resources</h3>
-            <ul>
-              <li><a href="#help">Help Center</a></li>
-              <li><a href="#guides">Teacher Guides</a></li>
-              <li><a href="#updates">Latest Updates</a></li>
-              <li><a href="#community">Community</a></li>
-            </ul>
-          </div>
-
-          <div className="footer-section">
-            <h3>Connect With Us</h3>
-            <div className="social-links">
-              <a href="#twitter" aria-label="Twitter">
+    <footer className="site-footer">
+      <div className="container">
+        <div className="footer-content">
+          <div className="footer-brand">
+            <div className="footer-logo">
+              <img src={logoImage} alt="EAD Logo" className="footer-logo-img" />
+            </div>
+            <p className="footer-description">
+              Empowering educators with modern tools to create, manage, and deliver exceptional 
+              learning experiences across Ontario's educational landscape.
+            </p>
+            <div className="footer-social">
+              <a href="#" className="social-link" aria-label="Twitter">
                 <i className="fab fa-twitter"></i>
               </a>
-              <a href="#linkedin" aria-label="LinkedIn">
-                <i className="fab fa-linkedin"></i>
+              <a href="#" className="social-link" aria-label="Facebook">
+                <i className="fab fa-facebook-f"></i>
               </a>
-              <a href="#youtube" aria-label="YouTube">
-                <i className="fab fa-youtube"></i>
+              <a href="#" className="social-link" aria-label="Instagram">
+                <i className="fab fa-instagram"></i>
+              </a>
+              <a href="#" className="social-link" aria-label="LinkedIn">
+                <i className="fab fa-linkedin-in"></i>
               </a>
             </div>
-            <div className="newsletter">
-              <h4>Stay Updated</h4>
-              <div className="newsletter-input">
-                <input type="email" placeholder="Enter your email" />
-                <button type="button">
-                  <i className="fas fa-paper-plane"></i>
-                </button>
-              </div>
+          </div>
+          
+          <div className="footer-links">
+            <div className="footer-links-column">
+              <h3 className="footer-heading">Quick Links</h3>
+              <ul className="footer-menu">
+                <li><Link to="/terms">Terms</Link></li>
+                <li><Link to="/lessonplan">Lesson Plan</Link></li>
+                <li><Link to="/assessment">Assessment</Link></li>
+                <li><Link to="/teacher-assistant">Teacher Assistant</Link></li>
+                <li><Link to="/student-assistant">Student Assistant</Link></li>
+              </ul>
+            </div>
+            
+            <div className="footer-links-column">
+              <h3 className="footer-heading">Resources</h3>
+              <ul className="footer-menu">
+                <li><a href="#">Documentation</a></li>
+                <li><a href="#">Tutorials</a></li>
+                <li><a href="#">FAQs</a></li>
+                <li><a href="#">Support</a></li>
+              </ul>
+            </div>
+            
+            <div className="footer-links-column">
+              <h3 className="footer-heading">Legal</h3>
+              <ul className="footer-menu">
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Terms of Service</a></li>
+                <li><a href="#">Cookie Policy</a></li>
+                <li><a href="#">GDPR Compliance</a></li>
+              </ul>
             </div>
           </div>
         </div>
-
+        
         <div className="footer-bottom">
-          <div className="footer-info">
-            <p>&copy; 2024 Early Age Development. All rights reserved.</p>
-            <div className="footer-links">
-              <a href="#privacy">Privacy Policy</a>
-              <a href="#terms">Terms of Use</a>
-              <a href="#accessibility">Accessibility</a>
-            </div>
-          </div>
-          <div className="ontario-brand">
-            <span className="ontario-text">Ontario.ca</span>
+          <p className="copyright">
+            &copy; {currentYear} Early Age Development. All rights reserved.
+          </p>
+          <div className="footer-bottom-links">
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+            <a href="#">Contact</a>
           </div>
         </div>
       </div>
@@ -73,4 +83,4 @@ const Footer = () => {
   );
 };
 
-export default Footer; 
+export default Footer;

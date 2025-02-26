@@ -1,11 +1,12 @@
 import React, { useState, useCallback, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import DOMPurify from 'dompurify';
 import './TeacherAssistant.css';
 
-const GROQ_API_KEY = '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';
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
 const TeacherAssistant = () => {
+  const navigate = useNavigate();
   const [selectedCurriculum, setSelectedCurriculum] = useState('');
   const [selectedSubject, setSelectedSubject] = useState('');
   const [selectedGrade, setSelectedGrade] = useState('');
@@ -17,6 +18,16 @@ const TeacherAssistant = () => {
   const [isVoiceInput, setIsVoiceInput] = useState(false);
   const speechSynthesis = window.speechSynthesis;
   const [utterance, setUtterance] = useState(null);
+
+  // Check if API key exists when component loads
+  useEffect(() => {
+    const apiKey = localStorage.getItem('groqApiKey');
+    if (!apiKey || apiKey.trim() === '') {
+      // Show the API key modal
+      localStorage.setItem('showApiKeyModal', 'true');
+      navigate('/terms');
+    }
+  }, [navigate]);
 
   const handleSpeak = useCallback(() => {
     if (isSpeaking) {
@@ -72,12 +83,17 @@ const TeacherAssistant = () => {
 
   const generateResponse = async (question) => {
     try {
+      const apiKey = localStorage.getItem('groqApiKey');
+      if (!apiKey || apiKey.trim() === '') {
+        throw new Error('API key is missing');
+      }
+
       const prompt = `As a teacher assistant for ${selectedSubject} Grade ${selectedGrade} in the ${selectedCurriculum} curriculum, please help with this question: ${question}`;
 
       const response = await fetch(GROQ_API_URL, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${GROQ_API_KEY}`,
+          'Authorization': `Bearer ${apiKey}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
